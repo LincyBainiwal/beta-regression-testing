@@ -5,6 +5,13 @@
 # Uses only the `random` provider — no real AWS credentials needed.
 
 terraform {
+  cloud {
+    organization = "nagateja-test-org"
+    workspaces {
+      name = "beta-regression-testing-lincy"
+    }
+  }
+
   required_version = ">= 1.5.0"
   required_providers {
     random = {

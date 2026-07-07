@@ -27,8 +27,9 @@ resource_policy "aws_s3_bucket" "s3_public_access_block_required" {
   }
 
   enforce {
-    condition     = local.is_fully_blocked
-    info_message  = "S3 bucket '${local.bucket_id}' has public access fully blocked ✓"
-    error_message = "S3 bucket '${local.bucket_id}' must have all public access block settings set to true"
+    enforcement_level = "advisory"
+    condition         = local.is_fully_blocked
+    info_message      = "S3 bucket '${local.bucket_id}' has public access fully blocked ✓"
+    error_message     = "S3 bucket '${local.bucket_id}' should have all public access block settings set to true (advisory only)"
   }
 }
