@@ -48,3 +48,13 @@ resource "aws_s3_bucket_public_access_block" "apply_time_test" {
 resource "random_id" "suffix" {
   byte_length = 4
 }
+
+# Add EC2 instance to show cost estimation
+resource "aws_instance" "cost_test" {
+  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI (us-east-1)
+  instance_type = "t3.micro"
+  
+  tags = merge(var.tags, {
+    Name = "cost-estimation-test"
+  })
+}
