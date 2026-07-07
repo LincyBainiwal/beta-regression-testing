@@ -10,10 +10,10 @@ resource_policy "aws_s3_bucket" "s3_public_access_block_required" {
     bucket_id = core::try(attrs.id, attrs.bucket, "")
 
     # core::getresources fetches all aws_s3_bucket_public_access_block resources
-    # that match the given filter — this is what makes it apply-time
+    # empty filter = match all (avoids unknown bucket id at plan time)
     public_access_blocks = core::getresources(
       "aws_s3_bucket_public_access_block",
-      { bucket = local.bucket_id }
+      {}
     )
 
     has_block            = core::length(local.public_access_blocks) > 0
