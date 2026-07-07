@@ -96,39 +96,39 @@ resource "aws_s3_bucket" "regression-fail" {
 #                    FSBP EC2.2 / EC2.9 / EC2.13
 # =============================================================================
 
-resource "aws_default_security_group" "regression" {
-  # Intentionally empty — covers EC2.2 pass case
-  tags = var.tags
-}
+# resource "aws_default_security_group" "regression" {
+#   # Intentionally empty — covers EC2.2 pass case
+#   tags = var.tags
+# }
 
-data "aws_ami" "amazon_linux_2_x86" {
-  most_recent = true
-  owners      = ["amazon"]
+# data "aws_ami" "amazon_linux_2_x86" {
+#   most_recent = true
+#   owners      = ["amazon"]
 
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
+#   filter {
+#     name   = "name"
+#     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+#   }
 
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
+#   filter {
+#     name   = "architecture"
+#     values = ["x86_64"]
+#   }
 
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+# }
 
-resource "aws_instance" "regression" {
-  # Hardcoded AMI so `terraform plan` doesn't make a live EC2 DescribeImages
-  # call against AWS (the regression suite runs without real credentials).
-  ami                         = data.aws_ami.amazon_linux_2_x86.id
-  instance_type               = var.instance_type
-  associate_public_ip_address = false
-  tags                        = merge(var.tags, { Name = "regression-instance" })
-}
+# resource "aws_instance" "regression" {
+#   # Hardcoded AMI so `terraform plan` doesn't make a live EC2 DescribeImages
+#   # call against AWS (the regression suite runs without real credentials).
+#   ami                         = data.aws_ami.amazon_linux_2_x86.id
+#   instance_type               = var.instance_type
+#   associate_public_ip_address = false
+#   tags                        = merge(var.tags, { Name = "regression-instance" })
+# }
 
 resource "aws_security_group" "regression" {
   name = "${var.bucket_prefix}regression"
