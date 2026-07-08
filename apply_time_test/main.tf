@@ -27,6 +27,16 @@ terraform {
 
 provider "aws" {
   region = var.region
+  
+  # Add default tags for all AWS resources
+  default_tags {
+    tags = {
+      Environment = "staging"
+      Compliance  = "required"
+      Team        = "platform"
+      ManagedBy   = "terraform"
+    }
+  }
 }
 
 provider "random" {}
