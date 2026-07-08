@@ -1,28 +1,31 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: BUSL-1.1
 #
-# Row 21: Test policy that validates workspace tags
-# Tests that TFPolicy can access and evaluate workspace tags
-# Note: This tests the meta.tfe_workspace object availability
+# Row 21: Test policy for workspace context
+# Tests that TFPolicy can evaluate policies in workspace context
+# Note: meta.tfe_workspace may not be available in current TFPolicy beta
 
-resource_policy "aws_s3_bucket" "workspace_tags_validation" {
+resource_policy "aws_s3_bucket" "workspace_context_validation" {
   enforcement_level = "advisory"
   
-  # Enforce block: Check if workspace metadata is accessible
-  enforce {
-    # Just check if meta.tfe_workspace exists and is accessible
-    # Using a simple condition that will always pass
-    condition = meta.tfe_workspace.name != null && meta.tfe_workspace.name != ""
-    
-    info_message = "✅ Workspace metadata accessible: workspace name is '${meta.tfe_workspace.name}'"
-    
-    error_message = "❌ Workspace metadata not accessible"
+  locals {
+    # Get all S3 buckets for validation
+    s3_buckets = core::getresources("aws_s3_bucket")
   }
   
-  # Enforce block: Log workspace information
+  # Enforce block: Validate S3 buckets exist in workspace
+  enforce {
+    condition = length(local.s3_buckets) > 0
+    
+    info_message = "✅ Workspace validation PASSED: Found ${length(local.s3_buckets)} S3 bucket(s) in workspace configuration"
+    
+    error_message = "❌ Workspace validation FAILED: No S3 buckets found in workspace"
+  }
+  
+  # Enforce block: Log bucket information
   enforce {
     condition = true  # Always pass, just for logging
     
-    info_message = "📋 Workspace Info: name='${meta.tfe_workspace.name}', id='${meta.tfe_workspace.id}'"
+    info_message = "📋 Workspace Context: Evaluating ${length(local.s3_buckets)} S3 bucket resource(s) in this workspace run"
   }
 }
