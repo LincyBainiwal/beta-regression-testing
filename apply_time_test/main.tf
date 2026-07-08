@@ -12,9 +12,7 @@ terraform {
     }
   }
 
-  # Testing Row 19: Terraform version compatibility with TFPolicy
-  # Using a very old version that may not support TFPolicy beta features
-  required_version = "= 1.3.0"
+  required_version = ">= 1.5.0"
   required_providers {
     random = {
       source  = "hashicorp/random"
