@@ -65,6 +65,9 @@ resource "aws_s3_bucket_public_access_block" "apply_time_test" {
   restrict_public_buckets = true
 }
 
+# Add data source for testing core::getdatasources
+data "aws_caller_identity" "current" {}
+
 # Add EC2 instance to show cost estimation
 # Commented out to avoid AMI/permission issues during testing
 # resource "aws_instance" "cost_test" {
