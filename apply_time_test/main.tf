@@ -60,11 +60,12 @@ resource "random_id" "suffix" {
 }
 
 # Add EC2 instance to show cost estimation
-resource "aws_instance" "cost_test" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI (us-east-1)
-  instance_type = "t3.micro"
-  
-  tags = merge(var.tags, {
-    Name = "cost-estimation-test"
-  })
-}
+# Commented out to avoid AMI/permission issues during testing
+# resource "aws_instance" "cost_test" {
+#   ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI (us-east-1)
+#   instance_type = "t3.micro"
+#
+#   tags = merge(var.tags, {
+#     Name = "cost-estimation-test"
+#   })
+# }
