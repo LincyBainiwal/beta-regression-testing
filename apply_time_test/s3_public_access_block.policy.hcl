@@ -1,5 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: BUSL-1.1
+# Test commit to verify policy set VCS sync
 #
 # Apply-time policy: checks S3 bucket public access block using core::getresources
 # core::getresources is an apply-time function — it fetches sibling resources
