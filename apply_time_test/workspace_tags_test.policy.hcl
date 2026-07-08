@@ -1,27 +1,38 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: BUSL-1.1
-#
-# Row 21: Test policy for workspace context
-# Tests that TFPolicy can evaluate policies in workspace context
-# Simplified to just validate the policy runs successfully
-
-resource_policy "aws_s3_bucket" "workspace_context_validation" {
+# Test policy that uses workspace tags
+resource_policy "aws_s3_bucket" "workspace_tags_validation" {
   enforcement_level = "advisory"
   
-  # Enforce block: Simple validation that always passes
-  enforce {
-    # Check if the bucket resource has an ID (it should during plan)
-    condition = resource.bucket != null && resource.bucket != ""
-    
-    info_message = "✅ Row 21 Test PASSED: Policy evaluated successfully in workspace context for S3 bucket '${resource.bucket}'"
-    
-    error_message = "❌ Row 21 Test FAILED: Bucket name is null or empty"
+  locals {
+    # Access workspace tags
+    workspace_env = meta.tfe_workspace.tags.environment
+    workspace_compliance = meta.tfe_workspace.tags.compliance
+    workspace_team = meta.tfe_workspace.tags.team
   }
   
-  # Enforce block: Log that policy is running
   enforce {
-    condition = true  # Always pass, just for logging
+    # Check if environment tag equals "staging"
+    condition = local.workspace_env == "staging"
     
-    info_message = "📋 Row 21: Workspace-scoped policy evaluation completed successfully"
+    info_message = "✅ Environment tag validation: workspace is tagged as '${local.workspace_env}'"
+    
+    error_message = "❌ Environment tag mismatch: expected 'staging', got '${local.workspace_env}'"
+  }
+  
+  enforce {
+    # Check if compliance tag is set to "required"
+    condition = local.workspace_compliance == "required"
+    
+    info_message = "✅ Compliance tag validation: compliance is '${local.workspace_compliance}'"
+    
+    error_message = "❌ Compliance tag issue: expected 'required', got '${local.workspace_compliance}'"
+  }
+  
+  enforce {
+    # Check if team tag is set
+    condition = local.workspace_team != null && local.workspace_team != ""
+    
+    info_message = "✅ Team tag validation: team is '${local.workspace_team}'"
+    
+    error_message = "❌ Team tag missing or empty"
   }
 }
