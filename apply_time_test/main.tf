@@ -52,8 +52,9 @@ resource "random_id" "suffix" {
 }
 
 # Simple S3 bucket — target for apply-time policy evaluation
+# Changed bucket name to force replacement for row 35 testing
 resource "aws_s3_bucket" "apply_time_test" {
-  bucket = "${var.bucket_prefix}apply-time-test-${random_id.suffix.hex}"
+  bucket = "${var.bucket_prefix}apply-time-test-v2-${random_id.suffix.hex}"
   tags   = var.tags
 }
 
